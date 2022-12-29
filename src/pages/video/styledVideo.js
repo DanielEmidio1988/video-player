@@ -8,10 +8,21 @@ export const MainVideoContainer = styled.div`
     
     .video-menu{
         width: 60%;
-        // border: 1px solid black;
     }
     
     .lateral-menu{
         width: 40%;
-        // border: 1px solid black;
-    }`
+    }
+    
+    @media screen and (max-device-width: 768px){
+        flex-direction: column;
+
+        .video-menu{
+            width: 100%;
+        }
+
+        .lateral-menu{
+            width: 100%;
+        }
+    }
+    `

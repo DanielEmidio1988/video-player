@@ -15,6 +15,18 @@ export const VideoPlayerStyle = styled.div`
 `
 
 export const ControlVideo = styled.div`
+
+div:first-child{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .progress-video{
+        width: 98%;
+    }
+}
+   
+    div:last-child{ 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -34,7 +46,17 @@ export const ControlVideo = styled.div`
         cursor: pointer;
     }
 
-    input{
-        width: 50%;
+
+
+    .progress-volume{
+        // visibility: hidden;
+        width: 10%;    
     }
+
+    // .progress-volume:hover{
+    //     // display: block;
+    //     visibility: visible;
+    //     width: 10%;
+    // } 
+    }  
     `
