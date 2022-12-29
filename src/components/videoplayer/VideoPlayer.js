@@ -11,7 +11,12 @@ function usePlayerState ($videoPlayer){
     const [playerState, setPlayerState] = useState({
         play: false, //controla o play/pause do video
         percentage: 0, //controla o percentual da barra de progresso do video
+        volume: false,
+        percentageVolume: 100,
     })
+
+    const [stopwatch,setStopwatch] = useState(0)
+
     const [time, setTime] = useState({
         seg: 0,
         min: 0,
@@ -26,7 +31,7 @@ function usePlayerState ($videoPlayer){
        playerState.play ? $videoPlayer.current.play() : $videoPlayer.current.pause()
     },[
         $videoPlayer,
-        playerState.play
+        playerState.play,
     ])
 
     //Daniel: função para ativar o botão play/pause
@@ -37,33 +42,101 @@ function usePlayerState ($videoPlayer){
         })
     }
 
+    //Daniel: função para ativar ou "mutar" o som
+    function toggleVolumePlay(){ 
+        $videoPlayer.current.muted = !$videoPlayer.current.muted
+
+        //Daniel: Analisar a condicional abaixo
+        // if($videoPlayer.current.muted){
+        //     setPlayerState({
+        //         ...playerState,
+        //         percentageVolume: 0,    
+        //     })
+        // }else{
+        //     setPlayerState({
+        //         ...playerState,
+        //         percentageVolume: 100,    
+        //     })
+        // }        
+        // setPlayerState({
+        //     ...playerState,
+        //     volume: !playerState.volume,
+        // })
+    }
+
     //Daniel: fará a sincronização da barra de progresso com o tempo atual do video
     function handleTimeUpdate (){
         const currentPercentage = ($videoPlayer.current.currentTime / $videoPlayer.current.duration)*100
-        
+        const percentageTotal = ($videoPlayer.current.duration).toFixed(0)
+        const auxTimer = (currentPercentage/10).toFixed(0)
         setPlayerState({
             ...playerState,
             percentage: currentPercentage,
+        })
+        setStopwatch(auxTimer)
+        setTime({
+            ...time,
+            seg: Math.floor(((auxTimer/60)%1)*60),
+            min: Math.floor(auxTimer/60),
+            hour: Math.floor(auxTimer/3600),
+            totalSeg: Math.floor(((percentageTotal/60)%1)*60),
+            totalMin: Math.floor(percentageTotal/60),
+            totalHour: Math.floor(percentageTotal/3600),
         })
     }
 
     //Daniel: função que serve para sincronizar manualmente a barra de progresso com o tempo do video
     function onChangeVideoPercentage (event){
         const currentPercentageValue = event.target.value
-        console.log(currentPercentageValue)
         $videoPlayer.current.currentTime = $videoPlayer.current.duration / 100 * currentPercentageValue
+        const auxTimer = (currentPercentageValue/10).toFixed(0)
         setPlayerState({
             ...playerState,
             percentage: currentPercentageValue,
         })
+        setStopwatch(auxTimer)
+    }
+
+    //Daniel: função que serve para sincronizar manualmente o volume do video
+    function onChangeVolumePercentage (event){
+        const currentPercentageValue = event.target.value
+        $videoPlayer.current.volume = (currentPercentageValue / 100) 
+        console.log($videoPlayer.current.volume)
+        setPlayerState({
+            ...playerState,
+            percentageVolume: currentPercentageValue,
+        })
+            
+        }
+    
+    // //Daniel: função para converter o tempo de video em HH:MM:SS
+    function convertTime(hour,min,seg){
+        if(hour <10 && hour>0){
+            hour = '0' + String(hour) + ':'
+        }else{
+            hour=''
+        }
+        if(min<10){
+            min = '0'+ String(min)
+        }else{
+            min = min - (Math.floor(min/60)*60)
+        }
+        if(seg < 10){
+            seg = '0' + String(seg)
+        }
+        return String(hour) + String(min) + ":"+ String(seg)
     }
 
     return {
         playerState,
         time,
+        stopwatch,
         toggleVideoPlay,
+        toggleVolumePlay,
         handleTimeUpdate,
         onChangeVideoPercentage,
+        onChangeVolumePercentage,
+        convertTime,
     }
 }
 
@@ -72,45 +145,67 @@ function VideoPlayer (){
     const video = {
         video_URL: "https://www.w3schools.com/html/mov_bbb.mp4",
         title: "Video 1",
-        description: "descricao descricao descricao descricao descricao descricao descricao descricao descricao"
+        description: "descricao descricao descricao descricao descricao descricao descricao descricao descricao",
+        $videoPlayer: useRef(null),
     }
-    // const video_URL = "https://www.w3schools.com/html/mov_bbb.mp4"
-    const $videoPlayer = useRef(null)
+    
     const {
         playerState,
         time,
-        toggleVideoPlay, 
+        stopwatch,
+        toggleVideoPlay,
+        toggleVolumePlay, 
         handleTimeUpdate, 
-        onChangeVideoPercentage} = usePlayerState($videoPlayer)
+        onChangeVideoPercentage,
+        onChangeVolumePercentage,
+        convertTime} = usePlayerState(video.$videoPlayer)
+
+    console.log('teste',video.$videoPlayer)
     
    
 
     return (
         <>
         <ContainerVideoPlayer>
+
             <VideoPlayerStyle>
                 <video
-                ref={$videoPlayer}
+                ref={video.$videoPlayer}
                 src={video.video_URL}
                 onTimeUpdate={handleTimeUpdate} //Daniel: propriedade que irá "puxar" a função handleTimeUpdate e capturar o tempo exato do video
                 />
                 <ControlVideo>
+                    <div>
+                        <input type="range"
+                        min="0"
+                        max="100"
+                        onChange={onChangeVideoPercentage}
+                        value={playerState.percentage}
+                        className="progress-video"/>
+                    </div>
+                    <div>
                     <div onClick={()=>toggleVideoPlay()}>
-                    {playerState.play ? 
-                    <img src={pause} alt="botão-pausa-video"/> : 
-                    <img src={play} alt="botão-play-video"/> }
+                        {playerState.play ? 
+                        <img src={pause} alt="botão-pausa-video"/> : 
+                        <img src={play} alt="botão-play-video"/> }
                     </div>
                     
-                    <img src={volume} alt="botão-volume-video"/>
-                    <scan>00:00/00:00</scan>
-                    {/* <scan>00:00/00:00</scan> */}
+                    <div onClick={()=>toggleVolumePlay()}>
+                        {playerState.volume || playerState.percentageVolume == 0 ? 
+                        <img src={mute} alt="botão-mudo-video"/> :
+                        <img src={volume} alt="botão-volume-video"/>}                        
+                    </div>
+
                     <input type="range"
                     min="0"
                     max="100"
-                    onChange={onChangeVideoPercentage}
-                    value={playerState.percentage}/>
+                    onChange={onChangeVolumePercentage}
+                    value={playerState.percentageVolume}   
+                    className="progress-volume"/> 
+                    <scan>{convertTime(time.hour,time.min,time.seg)}/{convertTime(time.totalHour,time.totalMin,time.totalSeg)}</scan>
+                    
                     <img src={maximize} alt="botão-maximizar-video"/>
-
+                    </div>
                 </ControlVideo>
             </VideoPlayerStyle>
             <div>
