@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react"
-import {ContainerVideoPlayer, VideoPlayerStyle, ControlVideo} from "./styleVideoPlayer"
+import {ContainerVideoPlayer, VideoPlayerStyle, ControlVideo, CommentVideo} from "./styleVideoPlayer"
 import play from "../../assets/icons/player-play.svg"
 import maximize from "../../assets/icons/maximize.svg"
 import volume from "../../assets/icons/volume.svg"
 import mute from "../../assets/icons/volume-3.svg"
 import pause from "../../assets/icons/player-pause.svg"
+import theater from "../../assets/icons/theater.svg"
 
 //Daniel: custom Hook Player Video
 function usePlayerState ($videoPlayer){
@@ -47,21 +48,21 @@ function usePlayerState ($videoPlayer){
         $videoPlayer.current.muted = !$videoPlayer.current.muted
 
         //Daniel: Analisar a condicional abaixo
-        // if($videoPlayer.current.muted){
-        //     setPlayerState({
-        //         ...playerState,
-        //         percentageVolume: 0,    
-        //     })
-        // }else{
-        //     setPlayerState({
-        //         ...playerState,
-        //         percentageVolume: 100,    
-        //     })
-        // }        
-        // setPlayerState({
-        //     ...playerState,
-        //     volume: !playerState.volume,
-        // })
+        if($videoPlayer.current.muted){
+            setPlayerState({
+                ...playerState,
+                percentageVolume: 0,    
+            })
+        }else{
+            setPlayerState({
+                ...playerState,
+                percentageVolume: 100,    
+            })
+        }        
+        setPlayerState({
+            ...playerState,
+            volume: !playerState.volume,
+        })
     }
 
     //Daniel: fará a sincronização da barra de progresso com o tempo atual do video
@@ -144,9 +145,11 @@ function usePlayerState ($videoPlayer){
 function VideoPlayer (){ 
     const video = {
         video_URL: "https://www.w3schools.com/html/mov_bbb.mp4",
-        title: "Video 1",
-        description: "descricao descricao descricao descricao descricao descricao descricao descricao descricao",
+        title: "BIG BUCK ADMIRANDO UMA BORBOLETA",
+        description: `"Aaaaaah como a Natureza é bela" pensou Big Bunny, até que...`,
         $videoPlayer: useRef(null),
+        module: 'Big Buck Bunny',
+        image: 'imagem',       
     }
     
     const {
@@ -159,9 +162,7 @@ function VideoPlayer (){
         onChangeVideoPercentage,
         onChangeVolumePercentage,
         convertTime} = usePlayerState(video.$videoPlayer)
-
-    console.log('teste',video.$videoPlayer)
-    
+   
    
 
     return (
@@ -204,14 +205,23 @@ function VideoPlayer (){
                     className="progress-volume"/> 
                     <scan>{convertTime(time.hour,time.min,time.seg)}/{convertTime(time.totalHour,time.totalMin,time.totalSeg)}</scan>
                     
+                    <select>
+                        {['0.25','0.5','Normal','1.25','1.5','2'].map(speed=>(
+                            <option
+                            key={`x${speed}`}>
+                                {speed}
+                            </option>
+                        ))}
+                    </select>
+                    <img src={theater} alt="botão-modo-teatro-video"/>
                     <img src={maximize} alt="botão-maximizar-video"/>
                     </div>
                 </ControlVideo>
             </VideoPlayerStyle>
-            <div>
+            <CommentVideo>
                 <h1>{video.title}</h1>
                 <div>{video.description}</div>
-            </div>
+            </CommentVideo>
         </ContainerVideoPlayer>
         </>
         

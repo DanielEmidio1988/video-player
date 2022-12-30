@@ -1,5 +1,6 @@
 import Header from "../../components/header/Header"
 import VideoPlayer from "../../components/videoplayer/VideoPlayer"
+import VideoMenu from "../../components/videomenu/VideoMenu"
 import {MainVideoContainer} from "./styledVideo"
 
 function Video (){ 
@@ -12,7 +13,7 @@ function Video (){
                 {/* Componente de Comentário */}
             </div>
             <div className="lateral-menu">
-                {/* Menu Lateral */}
+                <VideoMenu/>
             </div>
         </MainVideoContainer>
         </>
