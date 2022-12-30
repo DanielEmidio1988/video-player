@@ -22,7 +22,9 @@ export const MainVideoContainer = styled.div`
         }
 
         .lateral-menu{
-            width: 100%;
+            margin-left: 2%;
+            width: 98%;
+            margin-top: 32px;
         }
     }
     `

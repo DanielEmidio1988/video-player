@@ -11,7 +11,6 @@ export const VideoPlayerStyle = styled.div`
     video{
         width: 100%;    
     }
-
 `
 
 export const ControlVideo = styled.div`
@@ -60,3 +59,18 @@ div:first-child{
     // } 
     }  
     `
+
+export const CommentVideo = styled.div`
+
+    h1{
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+
+    div{
+        border-radius: 8px;
+        background-color: #EDEDED;
+        padding: 12px;
+        font-size: 14px;
+        // padding-top: 12px;
+    }`
