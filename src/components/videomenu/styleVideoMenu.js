@@ -27,6 +27,10 @@ export const MenuFilter = styled.div`
     display: flex;
     gap: 2%;
     margin-bottom: 12px;
+
+    :hover{
+        cursor: pointer;
+    }
 `
 
 export const SelectFilter = styled.span`
