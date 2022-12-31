@@ -69,27 +69,37 @@ function VideoMenu (){
         $videoPlayer: '$videoPlayer:',
         },
     ]
+
     const [cattegorys, setCattegorys]= useState([{
         cattegory: "Todos",
+        module: "",
         boolean: true,
     },
     {
         cattegory: "Big Buck Bunny",
+        module: "Big Buck Bunny",
         boolean: false,  
     },
     {
         cattegory: "Rascal",
+        module: "Rascal",
         boolean: false,  
     },
     {
         cattegory: "Bird",
+        module: "Bird",
         boolean: false,  
     },
     {
         cattegory: "Rabbit",
+        module: "Rabbit",
         boolean: false,  
     }
 ])
+
+const [search, setSearch] = useState("")
+
+const filterGalleryVideo = galleryVideo.filter((gallery) => { return gallery.module.includes(search)})
 
 function switchCattegory(cattegory){
     if(!cattegory.boolean){
@@ -114,11 +124,11 @@ function switchCattegory(cattegory){
                 {/* <span>{filters[0].cattegory}</span> */}
                 {cattegorys.map((cattegory)=>{
                     return(
-                        <SelectFilter cattegory={cattegory.boolean} onClick={()=>switchCattegory(cattegory)}>{cattegory.cattegory}</SelectFilter>
+                        <SelectFilter cattegory={cattegory.boolean} onClick={()=>setSearch(cattegory.module)}>{cattegory.cattegory}</SelectFilter>
                     )
                 })}
             </MenuFilter>
-            {galleryVideo.map((video) =>{
+            {filterGalleryVideo.map((video) =>{
             return (
             <CardVideo>
                 <div>

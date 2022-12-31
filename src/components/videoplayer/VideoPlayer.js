@@ -12,11 +12,18 @@ function usePlayerState ($videoPlayer){
     const [playerState, setPlayerState] = useState({
         play: false, //controla o play/pause do video
         percentage: 0, //controla o percentual da barra de progresso do video
-        volume: false,
-        percentageVolume: 100,
+        volume: false, //controla o mute/volume do video
+        percentageVolume: 100, //controla o nivel do volume do video
+        speedVideo: "Normal", //controla a velocidade do video
+        // time: [{
+        //     seg: 0,
+        //     min: 0,
+        //     hour: 0,
+        //     totalSeg: 0,
+        //     totalMin: 0,
+        //     totalHour: 0,
+        // }]
     })
-
-    const [stopwatch,setStopwatch] = useState(0)
 
     const [time, setTime] = useState({
         seg: 0,
@@ -74,7 +81,6 @@ function usePlayerState ($videoPlayer){
             ...playerState,
             percentage: currentPercentage,
         })
-        setStopwatch(auxTimer)
         setTime({
             ...time,
             seg: Math.floor(((auxTimer/60)%1)*60),
@@ -90,19 +96,16 @@ function usePlayerState ($videoPlayer){
     function onChangeVideoPercentage (event){
         const currentPercentageValue = event.target.value
         $videoPlayer.current.currentTime = $videoPlayer.current.duration / 100 * currentPercentageValue
-        const auxTimer = (currentPercentageValue/10).toFixed(0)
         setPlayerState({
             ...playerState,
             percentage: currentPercentageValue,
         })
-        setStopwatch(auxTimer)
     }
 
     //Daniel: função que serve para sincronizar manualmente o volume do video
     function onChangeVolumePercentage (event){
         const currentPercentageValue = event.target.value
         $videoPlayer.current.volume = (currentPercentageValue / 100) 
-        console.log($videoPlayer.current.volume)
         setPlayerState({
             ...playerState,
             percentageVolume: currentPercentageValue,
@@ -110,7 +113,18 @@ function usePlayerState ($videoPlayer){
             
         }
     
-    // //Daniel: função para converter o tempo de video em HH:MM:SS
+    //Daniel: função para converter a velocidade de reprodução
+    function onChangeSpeedVideo (event){
+        const auxSpeedVideo = event.target.value
+        auxSpeedVideo === "Normal" ? $videoPlayer.current.playbackRate = 1 : $videoPlayer.current.playbackRate = auxSpeedVideo
+            // setSpeedVideo(auxSpeedVideo)
+            setPlayerState({
+                ...playerState,
+                speedVideo: auxSpeedVideo,
+            })
+        }
+    
+    //Daniel: função para converter o tempo de video em HH:MM:SS
     function convertTime(hour,min,seg){
         if(hour <10 && hour>0){
             hour = '0' + String(hour) + ':'
@@ -131,16 +145,15 @@ function usePlayerState ($videoPlayer){
     return {
         playerState,
         time,
-        stopwatch,
         toggleVideoPlay,
         toggleVolumePlay,
         handleTimeUpdate,
         onChangeVideoPercentage,
         onChangeVolumePercentage,
+        onChangeSpeedVideo,
         convertTime,
     }
 }
-
 
 function VideoPlayer (){ 
     const video = {
@@ -155,13 +168,14 @@ function VideoPlayer (){
     const {
         playerState,
         time,
-        stopwatch,
         toggleVideoPlay,
         toggleVolumePlay, 
         handleTimeUpdate, 
         onChangeVideoPercentage,
         onChangeVolumePercentage,
-        convertTime} = usePlayerState(video.$videoPlayer)
+        onChangeSpeedVideo,
+        convertTime,
+        } = usePlayerState(video.$videoPlayer)
    
    
 
@@ -205,14 +219,16 @@ function VideoPlayer (){
                     className="progress-volume"/> 
                     <scan>{convertTime(time.hour,time.min,time.seg)}/{convertTime(time.totalHour,time.totalMin,time.totalSeg)}</scan>
                     
-                    <select>
-                        {['0.25','0.5','Normal','1.25','1.5','2'].map(speed=>(
+                    <select value={playerState.speedVideo} onChange={onChangeSpeedVideo}>
+                        {['Normal','1.5','2'].map(speed=>(
                             <option
+                            value={speed}
                             key={`x${speed}`}>
                                 {speed}
                             </option>
                         ))}
                     </select>
+
                     <img src={theater} alt="botão-modo-teatro-video"/>
                     <img src={maximize} alt="botão-maximizar-video"/>
                     </div>
