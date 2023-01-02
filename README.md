@@ -4,6 +4,8 @@
 
 Este projeto foi desenvolvido com o propósito desenvolver um Video-Player personalizado, onde você poderá assistir e gerenciar as funções de video, como Play, Pause, velocidade, entre outros.
 
+Para acessar o projeto, [clique aqui!](https://video-player-indol.vercel.app/).
+
 
 ## 📄 Descrição
 . Ao abrir a página, você conseguirá executar os seguintes comandos de player: play, pause, velocidade, volume, mudo.
