@@ -7,7 +7,9 @@ Este projeto foi desenvolvido com o propósito desenvolver um Video-Player perso
 
 ## 📄 Descrição
 . Ao abrir a página, você conseguirá executar os seguintes comandos de player: play, pause, velocidade, volume, mudo.
+
 . Na tela lateral direita, você poderá visualizar outros videos e filtrá-los conforme sua categoria.
+
 . Página responsiva para desktop, tablet e celular.
 
 ## 💻 Tecnologias 
@@ -26,8 +28,6 @@ Este projeto foi desenvolvido com o propósito desenvolver um Video-Player perso
 
 ### Front-End
 - npm install styled-components
-- npm install axios
-- npm install react-router-react
 
 ## 📫 Contato
 
