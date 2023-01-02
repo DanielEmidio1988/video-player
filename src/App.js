@@ -12,10 +12,9 @@ function App() {
   }`
 
   return (
-    <>
-    <GlobalStyled/>
-    <Video/>
-      
+    <>    
+      <GlobalStyled/>
+      <Video/>  
     </>
   );
 }

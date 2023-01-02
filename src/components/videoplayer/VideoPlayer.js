@@ -15,14 +15,7 @@ function usePlayerState ($videoPlayer){
         volume: false, //controla o mute/volume do video
         percentageVolume: 100, //controla o nivel do volume do video
         speedVideo: "Normal", //controla a velocidade do video
-        // time: [{
-        //     seg: 0,
-        //     min: 0,
-        //     hour: 0,
-        //     totalSeg: 0,
-        //     totalMin: 0,
-        //     totalHour: 0,
-        // }]
+        theater: false, //controla o modo teatro
     })
 
     const [time, setTime] = useState({
@@ -53,19 +46,7 @@ function usePlayerState ($videoPlayer){
     //Daniel: função para ativar ou "mutar" o som
     function toggleVolumePlay(){ 
         $videoPlayer.current.muted = !$videoPlayer.current.muted
-
-        //Daniel: Analisar a condicional abaixo
-        if($videoPlayer.current.muted){
-            setPlayerState({
-                ...playerState,
-                percentageVolume: 0,    
-            })
-        }else{
-            setPlayerState({
-                ...playerState,
-                percentageVolume: 100,    
-            })
-        }        
+       
         setPlayerState({
             ...playerState,
             volume: !playerState.volume,
@@ -117,7 +98,6 @@ function usePlayerState ($videoPlayer){
     function onChangeSpeedVideo (event){
         const auxSpeedVideo = event.target.value
         auxSpeedVideo === "Normal" ? $videoPlayer.current.playbackRate = 1 : $videoPlayer.current.playbackRate = auxSpeedVideo
-            // setSpeedVideo(auxSpeedVideo)
             setPlayerState({
                 ...playerState,
                 speedVideo: auxSpeedVideo,
@@ -177,8 +157,6 @@ function VideoPlayer (){
         convertTime,
         } = usePlayerState(video.$videoPlayer)
    
-   
-
     return (
         <>
         <ContainerVideoPlayer>
@@ -229,7 +207,7 @@ function VideoPlayer (){
                         ))}
                     </select>
 
-                    <img src={theater} alt="botão-modo-teatro-video"/>
+                    {/* <img src={theater} alt="botão-modo-teatro-video"/> */}
                     <img src={maximize} alt="botão-maximizar-video"/>
                     </div>
                 </ControlVideo>
